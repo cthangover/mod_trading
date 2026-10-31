@@ -12,11 +12,11 @@ namespace Cthangover.Mods.Trading.Tests
         {
             var original = new ShopInfo
             {
-                ID = "rpg_demo/village_merchant",
-                Name = "rpg_demo/shop/village_merchant",
+                ID = "rpg_plus/village_merchant",
+                Name = "rpg_plus/shop/village_merchant",
                 Currency = "money/shell",
-                Sells = new List<ShopOffer> { new() { Item = "rpg_demo/elixir", Price = 10 } },
-                Buys = new List<ShopOffer> { new() { Item = "rpg_demo/stones", Price = 2 } },
+                Sells = new List<ShopOffer> { new() { Item = "rpg_plus/elixir", Price = 10 } },
+                Buys = new List<ShopOffer> { new() { Item = "rpg_plus/stones", Price = 2 } },
             };
 
             var restored = JsonSerializer.Deserialize<ShopInfo>(JsonSerializer.Serialize(original));
@@ -25,10 +25,10 @@ namespace Cthangover.Mods.Trading.Tests
             ModAssert.Equal(original.Name, restored.Name, "Name");
             ModAssert.Equal(original.Currency, restored.Currency, "Currency");
             ModAssert.Equal(1, restored.Sells.Count, "Sells");
-            ModAssert.Equal("rpg_demo/elixir", restored.Sells[0].Item, "Sells item");
+            ModAssert.Equal("rpg_plus/elixir", restored.Sells[0].Item, "Sells item");
             ModAssert.Equal(10, restored.Sells[0].Price, "Sells price");
             ModAssert.Equal(1, restored.Buys.Count, "Buys");
-            ModAssert.Equal("rpg_demo/stones", restored.Buys[0].Item, "Buys item");
+            ModAssert.Equal("rpg_plus/stones", restored.Buys[0].Item, "Buys item");
             ModAssert.Equal(2, restored.Buys[0].Price, "Buys price");
         }
 

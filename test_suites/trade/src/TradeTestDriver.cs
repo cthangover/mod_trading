@@ -16,7 +16,7 @@ using Godot;
 namespace Cthangover.Mods.Trading.Tests
 {
     /// <summary>
-    /// Plays the gathering and trading loop of rpg_demo like a player: the hero
+    /// Plays the gathering and trading loop of rpg_plus like a player: the hero
     /// walks onto things in the forest (key events through
     /// <see cref="Input.ParseInputEvent"/>), eats a mushroom, talks to the
     /// merchant with E and trades in the window by clicking its cells and
@@ -33,10 +33,10 @@ namespace Cthangover.Mods.Trading.Tests
         private const float TimeoutSeconds = 90f;
         private const string Village = "rpg_village";
         private const string Forest = "rpg_forest";
-        private const string Branches = "rpg_demo/branches";
-        private const string Stones = "rpg_demo/stones";
-        private const string Mushroom = "rpg_demo/mushroom";
-        private const string Elixir = "rpg_demo/elixir";
+        private const string Branches = "rpg_plus/branches";
+        private const string Stones = "rpg_plus/stones";
+        private const string Mushroom = "rpg_plus/mushroom";
+        private const string Elixir = "rpg_plus/elixir";
         private const string Coin = ShopInfo.DefaultCurrency;
 
         private readonly string shotsDir;
@@ -106,7 +106,7 @@ namespace Cthangover.Mods.Trading.Tests
                 case 2:
                     if (!Settled(Forest) || AdvanceDialog())
                         return;
-                    Check(View.FindEvent("pick_branches_1")?.Visible == true, "brushwood lies in the forest");
+                    Check(View.Find("rpg_forest/pick_branches_1")?.Visible == true, "brushwood lies in the forest");
                     Press(Key.S, true);
                     Next();
                     return;
@@ -120,7 +120,7 @@ namespace Cthangover.Mods.Trading.Tests
                     if (!Settled(Forest) || AdvanceDialog() || ++waitTicks < 3)
                         return;
                     Check(Inventory.CheckCount(Branches) == 2, $"stepping on brushwood picks up 2, got {Inventory.CheckCount(Branches)}");
-                    Check(View.FindEvent("pick_branches_1")?.Visible == false, "picked brushwood disappears");
+                    Check(View.Find("rpg_forest/pick_branches_1")?.Visible == false, "picked brushwood disappears");
                     View.PlacePlayer(11, 2, RpgDirection.Down);
                     Next();
                     return;
