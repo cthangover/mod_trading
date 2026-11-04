@@ -26,19 +26,19 @@ The merchant's stock never runs out, and what you sell is not offered back: a sh
 
 ## A shop in data
 
-Shops are entities of kind `shop`, in a mod's `shops/` folder. The village merchant as RPG Demo defines it:
+Shops are entities of kind `shop`, in a mod's `shops/` folder. The village merchant as RPG Plus defines it:
 
 ```json
 {
   "Kind": "shop",
   "Items": [
     {
-      "Id": "rpg_demo/village_merchant",
-      "Name": "rpg_demo/shop/village_merchant",
-      "Sells": [ { "Item": "rpg_demo/elixir", "Price": 10 } ],
+      "Id": "rpg_plus/village_merchant",
+      "Name": "rpg_plus/shop/village_merchant",
+      "Sells": [ { "Item": "rpg_plus/elixir", "Price": 10 } ],
       "Buys": [
-        { "Item": "rpg_demo/branches", "Price": 1 },
-        { "Item": "rpg_demo/stones", "Price": 2 }
+        { "Item": "rpg_plus/branches", "Price": 1 },
+        { "Item": "rpg_plus/stones", "Price": 2 }
       ]
     }
   ]
@@ -51,19 +51,19 @@ Shops are entities of kind `shop`, in a mod's `shops/` folder. The village merch
 - `Currency` (optional) — the money item; the default is `money/coin`, the gold coin of this mod.
 - A price below 1 is ignored: a free item is a gift and belongs in a scenario.
 
-RPG Plus adds its gear and goods to the same merchant without touching RPG Demo's file, with a patch in its own `patches/shop.json`:
+A dependent mod can change this merchant through its own `patches/shop.json`. The explicit `Item` key updates offers rather than appending duplicates:
 
 ```json
-{ "Items": [ { "Id": "rpg_demo/village_merchant",
-  "Sells$add": [ { "Item": "classic/iron_sword", "Price": 30 } ],
-  "Buys$add": [ { "Item": "rpg_plus/wolf_pelt", "Price": 4 } ] } ] }
+{ "Items": [ { "Id": "rpg_plus/village_merchant",
+  "Sells$add": {"$key": "Item", "$items": [{"Item": "classic/iron_sword", "Price": 28}]},
+  "Buys$add": {"$key": "Item", "$items": [{"Item": "rpg_plus/wolf_pelt", "Price": 5}]} } ] }
 ```
 
 ## Opening a shop
 
 ```scenario
-text "Oh, a customer! Elixirs, fresh, almost no sediment." key=rpg_demo/merchant/line1
-action trade.open shop=rpg_demo/village_merchant
+text "Oh, a customer! Elixirs, fresh, almost no sediment." key=rpg_plus/merchant/line1
+action trade.open shop=rpg_plus/village_merchant
 end
 ```
 

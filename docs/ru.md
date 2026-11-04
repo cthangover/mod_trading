@@ -26,19 +26,19 @@ Trading добавляет в игру лавки. Лавка — это дан�
 
 ## Лавка в данных
 
-Лавки — это сущности вида `shop`, лежат в папке `shops/` мода. Деревенский торговец в том виде, как его определяет RPG Demo:
+Лавки — это сущности вида `shop`, лежат в папке `shops/` мода. Деревенский торговец в том виде, как его определяет RPG Plus:
 
 ```json
 {
   "Kind": "shop",
   "Items": [
     {
-      "Id": "rpg_demo/village_merchant",
-      "Name": "rpg_demo/shop/village_merchant",
-      "Sells": [ { "Item": "rpg_demo/elixir", "Price": 10 } ],
+      "Id": "rpg_plus/village_merchant",
+      "Name": "rpg_plus/shop/village_merchant",
+      "Sells": [ { "Item": "rpg_plus/elixir", "Price": 10 } ],
       "Buys": [
-        { "Item": "rpg_demo/branches", "Price": 1 },
-        { "Item": "rpg_demo/stones", "Price": 2 }
+        { "Item": "rpg_plus/branches", "Price": 1 },
+        { "Item": "rpg_plus/stones", "Price": 2 }
       ]
     }
   ]
@@ -51,19 +51,19 @@ Trading добавляет в игру лавки. Лавка — это дан�
 - `Currency` (необязательно) — денежный предмет; по умолчанию это `money/coin`, золотая монета этого мода.
 - Цена ниже 1 игнорируется: бесплатный предмет — это подарок, а подарки — дело сценария.
 
-RPG Plus добавляет свою экипировку и товары тому же торговцу, не трогая файл RPG Demo, — патчем в собственном `patches/shop.json`:
+Зависимый мод может изменить торговца в своём `patches/shop.json`. Явный ключ `Item` обновляет предложения вместо добавления дубликатов:
 
 ```json
-{ "Items": [ { "Id": "rpg_demo/village_merchant",
-  "Sells$add": [ { "Item": "classic/iron_sword", "Price": 30 } ],
-  "Buys$add": [ { "Item": "rpg_plus/wolf_pelt", "Price": 4 } ] } ] }
+{ "Items": [ { "Id": "rpg_plus/village_merchant",
+  "Sells$add": {"$key": "Item", "$items": [{"Item": "classic/iron_sword", "Price": 28}]},
+  "Buys$add": {"$key": "Item", "$items": [{"Item": "rpg_plus/wolf_pelt", "Price": 5}]} } ] }
 ```
 
 ## Открытие лавки
 
 ```scenario
-text "— О, покупатель! Эликсиры — свежие, почти без осадка." key=rpg_demo/merchant/line1
-action trade.open shop=rpg_demo/village_merchant
+text "— О, покупатель! Эликсиры — свежие, почти без осадка." key=rpg_plus/merchant/line1
+action trade.open shop=rpg_plus/village_merchant
 end
 ```
 

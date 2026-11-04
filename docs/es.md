@@ -26,19 +26,19 @@ El surtido del mercader nunca se agota, y lo que vendes no vuelve a ofrecerse: u
 
 ## Una tienda en datos
 
-Las tiendas son entidades de tipo `shop`, en la carpeta `shops/` de un mod. El mercader del pueblo tal como lo define RPG Demo:
+Las tiendas son entidades de tipo `shop`, en la carpeta `shops/` de un mod. El mercader del pueblo tal como lo define RPG Plus:
 
 ```json
 {
   "Kind": "shop",
   "Items": [
     {
-      "Id": "rpg_demo/village_merchant",
-      "Name": "rpg_demo/shop/village_merchant",
-      "Sells": [ { "Item": "rpg_demo/elixir", "Price": 10 } ],
+      "Id": "rpg_plus/village_merchant",
+      "Name": "rpg_plus/shop/village_merchant",
+      "Sells": [ { "Item": "rpg_plus/elixir", "Price": 10 } ],
       "Buys": [
-        { "Item": "rpg_demo/branches", "Price": 1 },
-        { "Item": "rpg_demo/stones", "Price": 2 }
+        { "Item": "rpg_plus/branches", "Price": 1 },
+        { "Item": "rpg_plus/stones", "Price": 2 }
       ]
     }
   ]
@@ -51,19 +51,19 @@ Las tiendas son entidades de tipo `shop`, en la carpeta `shops/` de un mod. El m
 - `Currency` (opcional) — el objeto de dinero; por defecto es `money/coin`, la moneda de oro de este mod.
 - Un precio menor que 1 se ignora: un objeto gratis es un regalo, y los regalos son cosa del escenario.
 
-RPG Plus añade su equipo y sus mercancías al mismo mercader sin tocar el archivo de RPG Demo, con un parche en su propio `patches/shop.json`:
+Un mod dependiente puede cambiar el mercader mediante su propio `patches/shop.json`. La clave explícita `Item` actualiza ofertas sin duplicarlas:
 
 ```json
-{ "Items": [ { "Id": "rpg_demo/village_merchant",
-  "Sells$add": [ { "Item": "classic/iron_sword", "Price": 30 } ],
-  "Buys$add": [ { "Item": "rpg_plus/wolf_pelt", "Price": 4 } ] } ] }
+{ "Items": [ { "Id": "rpg_plus/village_merchant",
+  "Sells$add": {"$key": "Item", "$items": [{"Item": "classic/iron_sword", "Price": 28}]},
+  "Buys$add": {"$key": "Item", "$items": [{"Item": "rpg_plus/wolf_pelt", "Price": 5}]} } ] }
 ```
 
 ## Abrir una tienda
 
 ```scenario
-text "¡Oh, un cliente! Elixires frescos, casi sin poso." key=rpg_demo/merchant/line1
-action trade.open shop=rpg_demo/village_merchant
+text "¡Oh, un cliente! Elixires frescos, casi sin poso." key=rpg_plus/merchant/line1
+action trade.open shop=rpg_plus/village_merchant
 end
 ```
 

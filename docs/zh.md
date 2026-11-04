@@ -26,19 +26,19 @@ Trading 给游戏添加商店。商店就是数据：商人卖什么、回收什
 
 ## 数据形式的商店
 
-商店是 `shop` 类型的实体，放在 mod 的 `shops/` 文件夹里。村商人由 RPG Demo 这样定义：
+商店是 `shop` 类型的实体，放在 mod 的 `shops/` 文件夹里。村商人由 RPG Plus 这样定义：
 
 ```json
 {
   "Kind": "shop",
   "Items": [
     {
-      "Id": "rpg_demo/village_merchant",
-      "Name": "rpg_demo/shop/village_merchant",
-      "Sells": [ { "Item": "rpg_demo/elixir", "Price": 10 } ],
+      "Id": "rpg_plus/village_merchant",
+      "Name": "rpg_plus/shop/village_merchant",
+      "Sells": [ { "Item": "rpg_plus/elixir", "Price": 10 } ],
       "Buys": [
-        { "Item": "rpg_demo/branches", "Price": 1 },
-        { "Item": "rpg_demo/stones", "Price": 2 }
+        { "Item": "rpg_plus/branches", "Price": 1 },
+        { "Item": "rpg_plus/stones", "Price": 2 }
       ]
     }
   ]
@@ -51,19 +51,19 @@ Trading 给游戏添加商店。商店就是数据：商人卖什么、回收什
 - `Currency`（可选）——货币物品；默认是 `money/coin`，本 mod 的金币。
 - 低于 1 的价格会被忽略：免费的物品是礼物，而礼物属于剧本。
 
-RPG Plus 用自己 `patches/shop.json` 里的补丁，把它的装备和货物加到同一个商人身上，不去动 RPG Demo 的文件：
+依赖此内容的模组可在自己的 `patches/shop.json` 中修改商人。显式 `Item` 键更新报价，而不是添加重复项：
 
 ```json
-{ "Items": [ { "Id": "rpg_demo/village_merchant",
-  "Sells$add": [ { "Item": "classic/iron_sword", "Price": 30 } ],
-  "Buys$add": [ { "Item": "rpg_plus/wolf_pelt", "Price": 4 } ] } ] }
+{ "Items": [ { "Id": "rpg_plus/village_merchant",
+  "Sells$add": {"$key": "Item", "$items": [{"Item": "classic/iron_sword", "Price": 28}]},
+  "Buys$add": {"$key": "Item", "$items": [{"Item": "rpg_plus/wolf_pelt", "Price": 5}]} } ] }
 ```
 
 ## 打开商店
 
 ```scenario
-text "哦，来客人了！药剂新鲜，几乎没有沉淀。" key=rpg_demo/merchant/line1
-action trade.open shop=rpg_demo/village_merchant
+text "哦，来客人了！药剂新鲜，几乎没有沉淀。" key=rpg_plus/merchant/line1
+action trade.open shop=rpg_plus/village_merchant
 end
 ```
 

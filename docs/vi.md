@@ -26,19 +26,19 @@ Hàng của thương nhân không bao giờ cạn, và thứ bạn bán không �
 
 ## Cửa hàng dưới dạng dữ liệu
 
-Cửa hàng là thực thể loại `shop`, nằm trong thư mục `shops/` của một mod. Thương nhân làng được RPG Demo định nghĩa như sau:
+Cửa hàng là thực thể loại `shop`, nằm trong thư mục `shops/` của một mod. Thương nhân làng được RPG Plus định nghĩa như sau:
 
 ```json
 {
   "Kind": "shop",
   "Items": [
     {
-      "Id": "rpg_demo/village_merchant",
-      "Name": "rpg_demo/shop/village_merchant",
-      "Sells": [ { "Item": "rpg_demo/elixir", "Price": 10 } ],
+      "Id": "rpg_plus/village_merchant",
+      "Name": "rpg_plus/shop/village_merchant",
+      "Sells": [ { "Item": "rpg_plus/elixir", "Price": 10 } ],
       "Buys": [
-        { "Item": "rpg_demo/branches", "Price": 1 },
-        { "Item": "rpg_demo/stones", "Price": 2 }
+        { "Item": "rpg_plus/branches", "Price": 1 },
+        { "Item": "rpg_plus/stones", "Price": 2 }
       ]
     }
   ]
@@ -51,19 +51,19 @@ Cửa hàng là thực thể loại `shop`, nằm trong thư mục `shops/` củ
 - `Currency` (không bắt buộc) — vật phẩm tiền tệ; mặc định là `money/coin`, đồng vàng của mod này.
 - Giá nhỏ hơn 1 bị bỏ qua: vật phẩm miễn phí là món quà, và quà tặng là việc của kịch bản.
 
-RPG Plus thêm trang bị và hàng hóa của mình vào cùng thương nhân mà không đụng tới tệp của RPG Demo, bằng một bản vá trong `patches/shop.json` của nó:
+Mod phụ thuộc có thể sửa thương nhân qua `patches/shop.json` của mình. Khóa `Item` tường minh cập nhật đề nghị thay vì thêm bản trùng:
 
 ```json
-{ "Items": [ { "Id": "rpg_demo/village_merchant",
-  "Sells$add": [ { "Item": "classic/iron_sword", "Price": 30 } ],
-  "Buys$add": [ { "Item": "rpg_plus/wolf_pelt", "Price": 4 } ] } ] }
+{ "Items": [ { "Id": "rpg_plus/village_merchant",
+  "Sells$add": {"$key": "Item", "$items": [{"Item": "classic/iron_sword", "Price": 28}]},
+  "Buys$add": {"$key": "Item", "$items": [{"Item": "rpg_plus/wolf_pelt", "Price": 5}]} } ] }
 ```
 
 ## Mở một cửa hàng
 
 ```scenario
-text "Ồ, có khách! Thuốc tiên mới, hầu như không cặn." key=rpg_demo/merchant/line1
-action trade.open shop=rpg_demo/village_merchant
+text "Ồ, có khách! Thuốc tiên mới, hầu như không cặn." key=rpg_plus/merchant/line1
+action trade.open shop=rpg_plus/village_merchant
 end
 ```
 

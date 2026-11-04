@@ -26,19 +26,19 @@ RPG Plus에서는 마을 상인이 이렇게 거래합니다: 말을 걸면 창�
 
 ## 데이터로서의 가게
 
-가게는 `shop` 종류의 엔티티로 mod의 `shops/` 폴더에 들어갑니다. 마을 상인을 RPG Demo는 이렇게 정의합니다:
+가게는 `shop` 종류의 엔티티로 mod의 `shops/` 폴더에 들어갑니다. 마을 상인을 RPG Plus는 이렇게 정의합니다:
 
 ```json
 {
   "Kind": "shop",
   "Items": [
     {
-      "Id": "rpg_demo/village_merchant",
-      "Name": "rpg_demo/shop/village_merchant",
-      "Sells": [ { "Item": "rpg_demo/elixir", "Price": 10 } ],
+      "Id": "rpg_plus/village_merchant",
+      "Name": "rpg_plus/shop/village_merchant",
+      "Sells": [ { "Item": "rpg_plus/elixir", "Price": 10 } ],
       "Buys": [
-        { "Item": "rpg_demo/branches", "Price": 1 },
-        { "Item": "rpg_demo/stones", "Price": 2 }
+        { "Item": "rpg_plus/branches", "Price": 1 },
+        { "Item": "rpg_plus/stones", "Price": 2 }
       ]
     }
   ]
@@ -51,19 +51,19 @@ RPG Plus에서는 마을 상인이 이렇게 거래합니다: 말을 걸면 창�
 - `Currency`(선택) — 돈 아이템. 기본값은 이 mod의 금화 `money/coin`.
 - 1 미만의 가격은 무시됩니다: 공짜 아이템은 선물이고, 선물은 시나리오의 일입니다.
 
-RPG Plus는 RPG Demo의 파일을 건드리지 않고, 자기 `patches/shop.json`의 패치로 같은 상인에게 장비와 물건을 추가합니다:
+의존 모드는 자체 `patches/shop.json`에서 상인을 수정할 수 있습니다. 명시적인 `Item` 키는 중복 추가 대신 기존 제안을 갱신합니다:
 
 ```json
-{ "Items": [ { "Id": "rpg_demo/village_merchant",
-  "Sells$add": [ { "Item": "classic/iron_sword", "Price": 30 } ],
-  "Buys$add": [ { "Item": "rpg_plus/wolf_pelt", "Price": 4 } ] } ] }
+{ "Items": [ { "Id": "rpg_plus/village_merchant",
+  "Sells$add": {"$key": "Item", "$items": [{"Item": "classic/iron_sword", "Price": 28}]},
+  "Buys$add": {"$key": "Item", "$items": [{"Item": "rpg_plus/wolf_pelt", "Price": 5}]} } ] }
 ```
 
 ## 가게 열기
 
 ```scenario
-text "오, 손님이다! 엘릭서 신선해요, 앙금도 거의 없어요." key=rpg_demo/merchant/line1
-action trade.open shop=rpg_demo/village_merchant
+text "오, 손님이다! 엘릭서 신선해요, 앙금도 거의 없어요." key=rpg_plus/merchant/line1
+action trade.open shop=rpg_plus/village_merchant
 end
 ```
 

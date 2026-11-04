@@ -26,19 +26,19 @@ RPG Plus では村の商人がこうして取引します: 彼に話しかけれ
 
 ## データとしての店
 
-店は `shop` 種類のエンティティで、mod の `shops/` フォルダに入ります。村の商人を RPG Demo はこう定義します:
+店は `shop` 種類のエンティティで、mod の `shops/` フォルダに入ります。村の商人を RPG Plus はこう定義します:
 
 ```json
 {
   "Kind": "shop",
   "Items": [
     {
-      "Id": "rpg_demo/village_merchant",
-      "Name": "rpg_demo/shop/village_merchant",
-      "Sells": [ { "Item": "rpg_demo/elixir", "Price": 10 } ],
+      "Id": "rpg_plus/village_merchant",
+      "Name": "rpg_plus/shop/village_merchant",
+      "Sells": [ { "Item": "rpg_plus/elixir", "Price": 10 } ],
       "Buys": [
-        { "Item": "rpg_demo/branches", "Price": 1 },
-        { "Item": "rpg_demo/stones", "Price": 2 }
+        { "Item": "rpg_plus/branches", "Price": 1 },
+        { "Item": "rpg_plus/stones", "Price": 2 }
       ]
     }
   ]
@@ -51,19 +51,19 @@ RPG Plus では村の商人がこうして取引します: 彼に話しかけれ
 - `Currency`（省略可）— お金のアイテム。既定はこの mod の金貨 `money/coin`。
 - 1 未満の値段は無視されます: 無料のアイテムは贈り物で、贈り物はシナリオの仕事です。
 
-RPG Plus は、RPG Demo のファイルを触らずに、自分の `patches/shop.json` のパッチで同じ商人に装備と品物を追加します:
+依存する MOD は自身の `patches/shop.json` で商人を変更できます。明示的な `Item` キーで既存の販売条件を更新し、重複を防ぎます。
 
 ```json
-{ "Items": [ { "Id": "rpg_demo/village_merchant",
-  "Sells$add": [ { "Item": "classic/iron_sword", "Price": 30 } ],
-  "Buys$add": [ { "Item": "rpg_plus/wolf_pelt", "Price": 4 } ] } ] }
+{ "Items": [ { "Id": "rpg_plus/village_merchant",
+  "Sells$add": {"$key": "Item", "$items": [{"Item": "classic/iron_sword", "Price": 28}]},
+  "Buys$add": {"$key": "Item", "$items": [{"Item": "rpg_plus/wolf_pelt", "Price": 5}]} } ] }
 ```
 
 ## 店を開く
 
 ```scenario
-text "おや、お客さんだ! エリクサーは新鮮、沈殿もほとんどなし。" key=rpg_demo/merchant/line1
-action trade.open shop=rpg_demo/village_merchant
+text "おや、お客さんだ! エリクサーは新鮮、沈殿もほとんどなし。" key=rpg_plus/merchant/line1
+action trade.open shop=rpg_plus/village_merchant
 end
 ```
 
