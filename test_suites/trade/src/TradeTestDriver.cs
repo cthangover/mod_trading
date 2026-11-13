@@ -29,6 +29,9 @@ namespace Cthangover.Mods.Trading.Tests
     /// </summary>
     public partial class TradeTestDriver : Node
     {
+        private int readinessToken = int.MinValue;
+        private ulong readinessStarted;
+        private ulong readinessFrame;
         private const float TickSeconds = 0.1f;
         private const float TimeoutSeconds = 90f;
         private const string Village = "rpg_village";
@@ -83,6 +86,23 @@ namespace Cthangover.Mods.Trading.Tests
             }
         }
 
+        // Deferred UI/scene work must finish before the original assertions run.
+        private bool WaitForReadyFrames(int token, bool ready, double timeoutSeconds = 30)
+        {
+            var now = global::Godot.Time.GetTicksMsec();
+            if (readinessToken != token)
+            {
+                readinessToken = token;
+                readinessStarted = now;
+                readinessFrame = 0;
+            }
+            if (now - readinessStarted > timeoutSeconds * 1000)
+                throw new global::System.TimeoutException($"readiness at step {token}: scene/UI did not become ready");
+            if (!ready) { readinessFrame = 0; return false; }
+            if (readinessFrame == 0) readinessFrame = global::Godot.Engine.GetProcessFrames();
+            return global::Godot.Engine.GetProcessFrames() - readinessFrame >= 2;
+        }
+
         private void RunStep()
         {
             switch (step)
@@ -117,7 +137,7 @@ namespace Cthangover.Mods.Trading.Tests
                     Next();
                     return;
                 case 4:
-                    if (!Settled(Forest) || AdvanceDialog() || ++waitTicks < 3)
+                    if (!Settled(Forest) || AdvanceDialog() || !WaitForReadyFrames(step, !View.Player.IsMoving))
                         return;
                     Check(Inventory.CheckCount(Branches) == 2, $"stepping on brushwood picks up 2, got {Inventory.CheckCount(Branches)}");
                     Check(View.Find("rpg_forest/pick_branches_1")?.Visible == false, "picked brushwood disappears");
@@ -125,14 +145,14 @@ namespace Cthangover.Mods.Trading.Tests
                     Next();
                     return;
                 case 5:
-                    if (StepDown(3))
+                    if (StepDown())
                         return;
                     Check(Inventory.CheckCount(Stones) == 2, $"stones picked up, got {Inventory.CheckCount(Stones)}");
                     View.PlacePlayer(10, 2, RpgDirection.Down);
                     Next();
                     return;
                 case 6:
-                    if (StepDown(3))
+                    if (StepDown())
                         return;
                     Check(Inventory.CheckCount(Mushroom) == 1, $"a mushroom picked up, got {Inventory.CheckCount(Mushroom)}");
                     Shot("forest");
@@ -244,7 +264,7 @@ namespace Cthangover.Mods.Trading.Tests
         /// frame, a tap within one tick would be missed), then waits for the touch
         /// event's dialog to end; true while busy.
         /// </summary>
-        private bool StepDown(int settleTicks)
+        private bool StepDown()
         {
             waitTicks++;
             if (waitTicks == 1)
@@ -255,7 +275,7 @@ namespace Cthangover.Mods.Trading.Tests
             if (View.Player.Cell.Y < 3)
                 return true;
             Press(Key.S, false);
-            return !Settled(Forest) || View.Player.IsMoving || AdvanceDialog() || waitTicks < settleTicks + 1;
+            return !Settled(Forest) || View.Player.IsMoving || AdvanceDialog() || !WaitForReadyFrames(step, true);
         }
 
         private static bool Settled(string map) => View?.Map?.ID == map && !GodotSceneService.IsTransitioning;
