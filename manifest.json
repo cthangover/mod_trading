@@ -1,7 +1,7 @@
 {
   "id": "trading",
   "name": "Trading",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "author": "ct",
   "description": "Shops as data and a trade window of two inventories: the merchant's goods on one side, the player's bag on the other, and money as an ordinary item.",
   "category": "gameplay",
@@ -11,7 +11,7 @@
   "test_sources": [
     "tests/*.cs"
   ],
-  "depends": ["ui_base>=1", "items_base>=1"],
+  "depends": ["ui_base>=0.1.0", "items_base>=0.1.0"],
   "test_suites": [
     {"id": "trade", "activate": ["--itest=trade"]}
   ],
