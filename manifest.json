@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "author": "ct",
   "description": "Shops as data and a trade window of two inventories: the merchant's goods on one side, the player's bag on the other, and money as an ordinary item.",
-  "category": "gameplay",
+  "categories": ["gameplay"],
   "sources": [
     "src/**/*.cs"
   ],
