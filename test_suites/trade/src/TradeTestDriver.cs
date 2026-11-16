@@ -324,7 +324,7 @@ namespace Cthangover.Mods.Trading.Tests
         private static bool SkipPrologue()
         {
             // Asking for the dialog box before the first scene is up caches the wrong node.
-            var scene = ((SceneTree)Engine.GetMainLoop()).Root.GetNodeOrNull<SceneManager>("SceneManager")?.CurrentSceneName;
+            var scene = ((SceneTree)Godot.Engine.GetMainLoop()).Root.GetNodeOrNull<SceneManager>("SceneManager")?.CurrentSceneName;
             if (string.IsNullOrEmpty(scene) || RpgWorldHost.Current?.View?.Map != null)
                 return false;
             var box = RpgInput.FindDialogBox();
