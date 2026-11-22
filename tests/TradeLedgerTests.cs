@@ -2,6 +2,7 @@ namespace Cthangover.Mods.Trading.Tests
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.Json;
     using Cthangover.Core.Items;
     using Cthangover.Core.Mods.Resolvers;
     using Cthangover.Core.Mods.Testing;
@@ -21,6 +22,31 @@ namespace Cthangover.Mods.Trading.Tests
             Sells = new List<ShopOffer> { new() { Item = goods, Price = 3 } },
             Buys = new List<ShopOffer> { new() { Item = goods, Price = 2 } },
         };
+
+        /// <summary>Capacity refusal preserves both sides of a deal; complete currency consumption can release a product cell.</summary>
+        [ModTest("ledger/grid_full_buy_and_sell_preserve_both_sides")]
+        public static void GridCapacity(ModTestContext context)
+        {
+            var goods = Goods();
+            var shop = Shop(goods);
+            var inventory = new Inventory();
+            ModAssert.True(inventory.TryConfigureGrid("grid", new InventoryGridData { Width = 1, Height = 1 }, out _));
+            inventory.Add(shop.Currency, 4);
+            var before = JsonSerializer.Serialize(inventory.CaptureStorage());
+            ModAssert.False(TradeLedger.Buy(inventory, shop, goods, 1));
+            ModAssert.Equal(before, JsonSerializer.Serialize(inventory.CaptureStorage()));
+            ModAssert.True(inventory.Remove(shop.Currency, 1));
+            ModAssert.True(TradeLedger.Buy(inventory, shop, goods, 1));
+            ModAssert.Equal(0, inventory.CheckCount(shop.Currency));
+            ModAssert.Equal(1, inventory.CheckCount(goods));
+            inventory.Add(goods, 1);
+            before = JsonSerializer.Serialize(inventory.CaptureStorage());
+            ModAssert.False(TradeLedger.Sell(inventory, shop, goods, 1));
+            ModAssert.Equal(before, JsonSerializer.Serialize(inventory.CaptureStorage()));
+            ModAssert.True(TradeLedger.Sell(inventory, shop, goods, 2));
+            ModAssert.Equal(4, inventory.CheckCount(shop.Currency));
+            ModAssert.Equal(0, inventory.CheckCount(goods));
+        }
 
         [ModTest("ledger/buy_takes_money_and_adds_goods")]
         static void BuyTakesMoneyAndAddsGoods(ModTestContext ctx)

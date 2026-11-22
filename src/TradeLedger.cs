@@ -1,7 +1,10 @@
 using Cthangover.Core.Items;
+    using System.Collections.Generic;
 
 namespace Cthangover.Mods.Trading
 {
+    using Cthangover.Core.Items;
+    using System.Collections.Generic;
     /// <summary>
     /// The arithmetic of a deal, apart from the window so it can be tested and
     /// reused by a scenario action later. A deal is all or nothing: it is checked
@@ -40,6 +43,9 @@ namespace Cthangover.Mods.Trading
         {
             if (count <= 0 || count > MaxBuy(inventory, shop, itemId))
                 return false;
+            if (inventory is Inventory owner)
+                return owner.TryExchange(new Dictionary<string, int> { [shop.Currency] = shop.FindSell(itemId).Price * count },
+                    new Dictionary<string, int> { [itemId] = count }, out _, purpose: "trade/buy");
             if (!inventory.Remove(shop.Currency, shop.FindSell(itemId).Price * count))
                 return false;
             inventory.Add(itemId, count);
@@ -55,6 +61,12 @@ namespace Cthangover.Mods.Trading
         {
             if (count <= 0 || count > MaxSell(inventory, shop, itemId))
                 return false;
+            var payment = (long)shop.FindBuy(itemId).Price * count;
+            if (payment > int.MaxValue || (long)Money(inventory, shop) + payment > int.MaxValue)
+                return false;
+            if (inventory is Inventory owner)
+                return owner.TryExchange(new Dictionary<string, int> { [itemId] = count },
+                    new Dictionary<string, int> { [shop.Currency] = (int)payment }, out _, purpose: "trade/sell");
             if (!inventory.Remove(itemId, count))
                 return false;
             inventory.Add(shop.Currency, shop.FindBuy(itemId).Price * count);
